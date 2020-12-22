@@ -1,0 +1,29 @@
+{
+    "name": "hoangdo/notification",
+    "description": "The notification package for laravel",
+    "type": "metapackage",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hoang Do",
+            "email": "hoangdo2194@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "HoangDo\\Notification\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "illuminate/http": "~5.0|~6.0|~7.0",
+        "illuminate/config": "~5.0|~6.0|~7.0",
+        "illuminate/support": "~5.0|~6.0|~7.0",
+        "illuminate/database": "~5.0|~6.0|~7.0",
+        "illuminate/console": "~5.0|~6.0|~7.0",
+        "illuminate/filesystem": "~5.0|~6.0|~7.0",
+        "illuminate/validation": "~5.0|~6.0|~7.0",
+        "bensampo/laravel-enum": "^1.38.0",
+        "prettus/l5-repository": "^2.6.46"
+    }
+}
