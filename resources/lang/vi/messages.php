@@ -77,5 +77,6 @@ return [
     'not_found_parent' => 'Không tìm thấy mục cha',
     'now' => 'hiện tại',
     'verified' => 'Đủ thông tin',
-    'not_verify' => 'Chưa xác thực'
+    'not_verify' => 'Chưa xác thực',
+    'category_can_not_be_parent_of_it_self' => 'Danh mục không thể chọn chính mình làm danh mục cha'
 ];

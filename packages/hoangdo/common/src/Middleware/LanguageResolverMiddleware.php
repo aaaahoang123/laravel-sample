@@ -10,8 +10,10 @@ class LanguageResolverMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $locale = $request->getLanguages()[0] ?? config('app.locale');
-        App::setLocale($locale);
+        $locale = $request->header('locale') ?? config('app.locale');
+        if ($locale) {
+            App::setLocale($locale);
+        }
         return $next($request);
     }
 }

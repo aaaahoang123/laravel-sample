@@ -4,10 +4,13 @@
 namespace App\Services\Impl;
 
 
+use App\Models\Category;
 use App\Repositories\Contract\CategoryRepository;
 use App\Services\Contract\CategoryService;
+use HoangDo\Common\Request\ValidatedRequest;
 use HoangDo\Common\Service\SimpleService;
 use HoangDo\Common\Service\SimpleServiceProps;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CategoryServiceImpl extends SimpleService implements CategoryService
 {
@@ -33,5 +36,16 @@ class CategoryServiceImpl extends SimpleService implements CategoryService
     public function listAll()
     {
         return $this->categoryRepo->findAllCategories();
+    }
+
+    protected function beforeEdit($instance, ValidatedRequest $req)
+    {
+        /** @var Category $instance */
+        if (is_null($req->get('parent_id'))) {
+            $instance->parent_id = null;
+        }
+        if ($req->get('parent_id') == $instance->id) {
+            throw new BadRequestHttpException(__('messages.category_can_not_be_parent_of_it_self'));
+        }
     }
 }

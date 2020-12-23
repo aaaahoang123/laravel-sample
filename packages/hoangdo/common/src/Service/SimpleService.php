@@ -47,6 +47,7 @@ abstract class SimpleService implements Service
             $slug = $this->generateSlug($req->get($this->_props->titleField));
             $instance->setAttribute($this->_props->slugField, $slug);
         }
+        $this->beforeCreate($instance, $req);
         return $this->_props->repository->save($instance);
     }
 
@@ -83,8 +84,17 @@ abstract class SimpleService implements Service
                 $instance->setAttribute($this->_props->slugField, $newSlug);
             }
         }
+        $this->beforeEdit($instance, $req);
 
         return $this->_props->repository->save($instance);
+    }
+
+    protected function beforeEdit($instance, ValidatedRequest $req)
+    {
+    }
+
+    protected function beforeCreate($instance, ValidatedRequest $req)
+    {
     }
 
     public function delete($id)
