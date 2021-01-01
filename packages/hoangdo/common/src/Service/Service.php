@@ -5,6 +5,7 @@ namespace HoangDo\Common\Service;
 
 
 use HoangDo\Common\Request\ValidatedRequest;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,9 +19,11 @@ interface Service
     public function create(ValidatedRequest $req);
 
     /**
-     * @return Collection|Model[]
+     * @param array|mixed|null $query
+     * @param int|null $limit
+     * @return Collection|Model[]|LengthAwarePaginator
      */
-    public function listAll();
+    public function listAll($query = null, $limit = null);
 
     /**
      * @param $id

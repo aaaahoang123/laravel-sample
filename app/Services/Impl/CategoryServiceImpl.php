@@ -33,7 +33,7 @@ class CategoryServiceImpl extends SimpleService implements CategoryService
         return $props;
     }
 
-    public function listAll()
+    public function listAll($query = null, $limit = null)
     {
         return $this->categoryRepo->findAllCategories();
     }

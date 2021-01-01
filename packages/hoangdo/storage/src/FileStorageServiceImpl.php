@@ -1,9 +1,10 @@
 <?php
 
 
-namespace HoangDo\Common\Storage;
+namespace HoangDo\Storage;
 
 use Carbon\Carbon;
+use Exception;
 use HoangDo\Common\Exception\ExecuteException;
 use HoangDo\Common\Helper\Constant;
 use Illuminate\Contracts\Routing\UrlGenerator;
@@ -12,47 +13,69 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManagerStatic;
+use RuntimeException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class StorageServiceImpl implements StorageService
+class FileStorageServiceImpl implements FileStorageService
 {
     private $upload_path;
+    private $acceptedMimes;
+    private $dailyFolder;
+    private array $compressibleExtension = ['jpg', 'jpeg', 'png'];
 
     public function __construct()
     {
         $this->upload_path = config('storage.path');
+        $this->acceptedMimes = explode(',', config('storage.mimes'));
+        $this->dailyFolder = explode(',', config('storage.daily_folder'));
     }
 
     /**
      * @param UploadedFile|string $file
      * @param string $folder
      * @return string
-     * @throws ExecuteException
+     * @throws BadRequestHttpException
+     * @throws RuntimeException
      */
     public function storeFile($file = null, $folder = '')
     {
         if (!$file)
-            throw new ExecuteException(__('messages.not_found_file'));
-        $resource = ImageManagerStatic::make($file);
-        $extension = str_replace('image/', '', $resource->mime());
-        if (!Str::contains($extension, config('storage.mimes')))
-            throw new ExecuteException(__('messages.invalid_file_type'));
-        $folder = $this->resolveFolder($folder);
-        $file_name = $this->generateName();
-        $path = $folder
-            ? $folder . '/' . $file_name
-            : $file_name;
+            throw new BadRequestHttpException(__('messages.not_found_file'));
+        try {
+            $resource = ImageManagerStatic::make($file);
+            $extension = str_replace('image/', '', $resource->mime());
+            if (!Str::contains($extension, $this->acceptedMimes))
+                throw new BadRequestHttpException(__('messages.invalid_file_type'));
+            $folder = $this->resolveFolder($folder);
+            $file_name = $this->generateName($extension);
+            $path = $folder
+                ? $folder . '/' . $file_name
+                : $file_name;
 
-        $this->compressResourceImage($resource, $path, 1000);
-        return $path;
-    }
-
-    public function storeFileFromUrl($url, $folder = '')
-    {
-        return $this->storeFile($url, $folder);
+            if (in_array($extension, $this->compressibleExtension)) {
+                $this->compressResourceImage($resource, $path, 1000);
+            } else {
+                $this->saveFile($resource, $path);
+            }
+            return $path;
+        } catch (Exception $e) {
+            if (!$file instanceof UploadedFile) {
+                throw new RuntimeException('Not support save by string with non-image file.');
+            }
+            $extension = $file->extension();
+            if (!Str::contains($extension, $this->acceptedMimes))
+                throw new BadRequestHttpException(__('messages.invalid_file_type'));
+            $file_name = $this->generateName($extension);
+            $path = $folder
+                ? $folder . '/' . $file_name
+                : $file_name;
+            $file->move(public_path($this->upload_path . $path));
+            return $path;
+        }
     }
 
     private function resolveFolder($folder = '') {
-        if ($folder && in_array($folder, config('storage.daily_folder')))
+        if ($folder && in_array($folder, $this->dailyFolder))
             $folder .= '/' . Carbon::now()->format(Constant::FOLDER_LIKE_DATE_FORMAT);
 
         $folder = $folder ?? '';
@@ -112,12 +135,12 @@ class StorageServiceImpl implements StorageService
      * @param $path
      * @return UrlGenerator|string
      */
-    public function uploaded_url($path = '')
+    public function uploadedUrl($path = '')
     {
         return url($this->upload_path . $path);
     }
 
-    public function full_path($path = '')
+    public function fullPath($path = '')
     {
         return '/' . $this->upload_path . $path;
     }
@@ -145,6 +168,15 @@ class StorageServiceImpl implements StorageService
                 ->resize($limit_width, $limit_width * $height / $width)
                 ->encode('jpg', 80);
         }
+        $this->saveFile($source_image, $path);
+    }
+
+    /**
+     * @param Image $source_image
+     * @param string $path
+     */
+    private function saveFile($source_image, $path)
+    {
         $source_image->save(public_path($this->upload_path . $path));
     }
 

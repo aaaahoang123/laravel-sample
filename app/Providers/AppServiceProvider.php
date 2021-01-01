@@ -3,15 +3,19 @@
 namespace App\Providers;
 
 use App\Services\Contract\CategoryService;
+use App\Services\Contract\ProductService;
+use App\Services\Contract\TagService;
 use App\Services\Impl\CategoryServiceImpl;
-use DB;
+use App\Services\Impl\ProductServiceImpl;
+use App\Services\Impl\TagServiceImpl;
 use Illuminate\Support\ServiceProvider;
-use Log;
 
 class AppServiceProvider extends ServiceProvider
 {
     public array $singletons = [
-        CategoryService::class => CategoryServiceImpl::class
+        CategoryService::class => CategoryServiceImpl::class,
+        ProductService::class => ProductServiceImpl::class,
+        TagService::class => TagServiceImpl::class,
     ];
     /**
      * Register any application services.

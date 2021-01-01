@@ -46,7 +46,8 @@
             "Database\\Seeders\\": "database/seeders/",
             "HoangDo\\Notification\\": "packages/hoangdo/notification/src/",
             "HoangDo\\Authorization\\": "packages/hoangdo/authorization/src/",
-            "HoangDo\\Common\\": "packages/hoangdo/common/src/"
+            "HoangDo\\Common\\": "packages/hoangdo/common/src/",
+            "HoangDo\\Storage\\": "packages/hoangdo/storage/src/"
         },
         "files": [
             "packages/hoangdo/common/src/Helper/helper.php"

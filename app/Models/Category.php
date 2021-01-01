@@ -55,9 +55,6 @@ class Category extends Model
         'sort_number'
     ];
 
-//    protected $appends = ['children'];
-
-
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
@@ -67,5 +64,10 @@ class Category extends Model
     {
         return $this->hasMany(self::class, 'parent_id')
             ->where('status', CommonStatus::ACTIVE);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status == CommonStatus::ACTIVE;
     }
 }

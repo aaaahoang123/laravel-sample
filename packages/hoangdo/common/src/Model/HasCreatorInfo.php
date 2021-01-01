@@ -21,13 +21,11 @@ trait HasCreatorInfo
     }
 
     public function created_by(): BelongsTo {
-        /** @var Model $this */
         $this->validateClassType();
         return $this->belongsTo(config('auth.providers.users.model'), $this->createdByField);
     }
 
     public function updated_by(): BelongsTo {
-        /** @var Model $this */
         $this->validateClassType();
         return $this->belongsTo(config('auth.providers.users.model'), $this->updatedByField);
     }

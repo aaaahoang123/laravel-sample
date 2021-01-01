@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Middleware;
+namespace HoangDo\Common\Middleware;
 
 
 use Closure;

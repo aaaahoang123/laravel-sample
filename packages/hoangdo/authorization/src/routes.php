@@ -9,7 +9,7 @@ Route::group([
     'middleware' => [
         'api',
         'auth:jwt',
-        RoleUtils::hasAny(BaseRole::CAN_MANAGE_POLICIES)
+//        RoleUtils::hasAny(BaseRole::CAN_MANAGE_POLICIES)
     ],
 ], function () {
     Route::post('join', [PolicyManageController::class, 'userJoinPolicy']);

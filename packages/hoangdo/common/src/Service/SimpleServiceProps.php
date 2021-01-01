@@ -20,4 +20,8 @@ class SimpleServiceProps
     public bool $listIgnoreStatus = false;
     public string $identifyField = 'id';
     public string $statusField = 'status';
+    /**
+     * @var array|null $commonRelations
+     */
+    public $commonRelations;
 }

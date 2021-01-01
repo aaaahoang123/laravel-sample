@@ -166,6 +166,9 @@ return [
          * Package Service Providers...
          */
         HoangDo\Common\Provider\CommonServiceProvider::class,
+        HoangDo\Storage\StorageServiceProvider::class,
+//        HoangDo\Notification\Provider\NotificationServiceProvider::class,
+//        HoangDo\Authorization\Provider\AuthorizationServiceProvider::class,
 
         /*
          * Application Service Providers...

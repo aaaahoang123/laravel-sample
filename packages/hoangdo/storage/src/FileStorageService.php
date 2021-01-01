@@ -1,12 +1,12 @@
 <?php
 
-namespace HoangDo\Common\Storage;
+namespace HoangDo\Storage;
 
 use HoangDo\Common\Exception\ExecuteException;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Http\UploadedFile;
 
-interface StorageService
+interface FileStorageService
 {
     /**
      * @param UploadedFile $file
@@ -15,14 +15,6 @@ interface StorageService
      * @throws ExecuteException
      */
     public function storeFile($file = null, $folder = '');
-
-    /**
-     * @param string $url
-     * @param string $folder
-     * @return string
-     * @throws ExecuteException
-     */
-    function storeFileFromUrl($url, $folder = '');
 
     /**
      * @param UploadedFile[] $files
@@ -55,13 +47,13 @@ interface StorageService
      * @param $path
      * @return UrlGenerator|string
      */
-    public function uploaded_url($path = '');
+    public function uploadedUrl($path = '');
 
     /**
      * @param string $path
      * @return string
      */
-    public function full_path($path = '');
+    public function fullPath($path = '');
 
     /**
      * @param string $path

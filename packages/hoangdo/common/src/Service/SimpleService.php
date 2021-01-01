@@ -10,6 +10,7 @@ use HoangDo\Common\Enum\CommonStatus;
 use HoangDo\Common\Model\HasCreatorInfo;
 use HoangDo\Common\Request\ValidatedRequest;
 use Illuminate\Database\Eloquent\Model;
+use Prettus\Repository\Contracts\CriteriaInterface;
 
 abstract class SimpleService implements Service
 {
@@ -36,6 +37,18 @@ abstract class SimpleService implements Service
         /** @var Model $instance */
         $instance = new $modelClass($req->filteredData());
 
+        $this->resolveCreator($instance, $req);
+        if ($this->_props->useSlug) {
+            $slug = $this->generateSlug($req->get($this->_props->titleField));
+            $instance->setAttribute($this->_props->slugField, $slug);
+        }
+        $this->beforeCreate($instance, $req);
+        $instance = $this->_props->repository->save($instance);
+        $this->afterCreate($instance, $req);
+        return $instance;
+    }
+
+    protected function resolveCreator($instance, ValidatedRequest $req) {
         $traits = class_uses_recursive($instance);
         if (in_array(HasCreatorInfo::class, $traits)) {
             $creator = $req->user();
@@ -43,27 +56,39 @@ abstract class SimpleService implements Service
             $instance->created_by()->associate($creator);
             $instance->updated_by()->associate($creator);
         }
-        if ($this->_props->useSlug) {
-            $slug = $this->generateSlug($req->get($this->_props->titleField));
-            $instance->setAttribute($this->_props->slugField, $slug);
-        }
-        $this->beforeCreate($instance, $req);
-        return $this->_props->repository->save($instance);
     }
 
-    public function listAll()
+    public function listAll($query = null, $limit = null)
     {
+        $repository = $this->_props->repository;
         if (!$this->_props->listIgnoreStatus) {
-            $this->_props->repository->pushCriteria(new HasStatusCriteria());
+            $repository->pushCriteria(new HasStatusCriteria());
         }
 
-        return $this->_props->repository->all();
+        if (is_array($query)) {
+            $criteria = $this->queryToCriteria($query);
+            $repository->pushCriteria($criteria);
+        }
+
+        if ($relations = $this->_props->commonRelations) {
+            $repository->with($relations);
+        }
+
+        if ($limit) {
+            return $repository->paginate($limit);
+        }
+        return $repository->all();
     }
 
     public function single($id)
     {
-        $this->_props->repository->pushCriteria(new WhereCriteria($this->_props->identifyField, $id));
-        return $this->_props->repository->first();
+
+        $repository = $this->_props->repository;
+        $repository->pushCriteria(new WhereCriteria($this->_props->identifyField, $id));
+        if ($relations = $this->_props->commonRelations) {
+            $repository->with($relations);
+        }
+        return $repository->firstOrFail();
     }
 
     public function edit($id, ValidatedRequest $req)
@@ -84,9 +109,12 @@ abstract class SimpleService implements Service
                 $instance->setAttribute($this->_props->slugField, $newSlug);
             }
         }
-        $this->beforeEdit($instance, $req);
 
-        return $this->_props->repository->save($instance);
+        $this->beforeEdit($instance, $req);
+        $instance = $this->_props->repository->save($instance);
+        $this->afterEdit($instance, $req);
+
+        return $instance;
     }
 
     protected function beforeEdit($instance, ValidatedRequest $req)
@@ -95,6 +123,23 @@ abstract class SimpleService implements Service
 
     protected function beforeCreate($instance, ValidatedRequest $req)
     {
+    }
+
+    protected function afterCreate($instance, ValidatedRequest $req)
+    {
+    }
+
+    protected function afterEdit($instance, ValidatedRequest $req)
+    {
+    }
+
+    /**
+     * @param array|mixed $query
+     * @return array|CriteriaInterface[]|string[]
+     */
+    protected function queryToCriteria(array $query): array
+    {
+        return [];
     }
 
     public function delete($id)
