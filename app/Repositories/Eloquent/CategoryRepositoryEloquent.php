@@ -93,9 +93,13 @@ class CategoryRepositoryEloquent extends RepositoryEloquent implements CategoryR
             if (!empty($parents_map[$child->parent_id])) {
                 /** @var Category $parent */
                 $parent = $parents_map[$child->parent_id];
-                $children_arr = $parent->relationLoaded('children') ? $parent->getRelation('children') : [];
-                $children_arr[] = $child;
-                $parent->setRelation('children', new Collection($children_arr));
+                if ($parent->relationLoaded('children')) {
+                    $mapping_children = $parent->children;
+                } else {
+                    $mapping_children = collect();
+                    $parent->setRelation('children', $mapping_children);
+                }
+                $mapping_children->add($child);
             }
         }
     }

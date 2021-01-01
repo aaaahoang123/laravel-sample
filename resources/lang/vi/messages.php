@@ -78,5 +78,8 @@ return [
     'now' => 'hiện tại',
     'verified' => 'Đủ thông tin',
     'not_verify' => 'Chưa xác thực',
-    'category_can_not_be_parent_of_it_self' => 'Danh mục không thể chọn chính mình làm danh mục cha'
+    'category_can_not_be_parent_of_it_self' => 'Danh mục không thể chọn chính mình làm danh mục cha',
+    'category_has_been_banned' => 'Danh mục đã bị xóa',
+    'category_is_not_product_type' => ':Category không phải danh mục sản phẩm',
+    'category_is_not_article_type' => ':Category không phải danh mục bài viết',
 ];

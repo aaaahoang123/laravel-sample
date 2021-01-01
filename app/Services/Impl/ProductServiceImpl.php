@@ -120,7 +120,10 @@ class ProductServiceImpl extends SimpleService implements ProductService
         /** @var Category $category */
         $category = $this->categoryRepo->find($id);
         if (!$category->isActive()) {
-            throw new BadRequestHttpException(__('messages.invalid_category'));
+            throw new BadRequestHttpException(__('messages.category_has_been_banned'));
+        }
+        if (!$category->isProductCategory()) {
+            throw new BadRequestHttpException(__('messages.category_is_not_product_type', ['category' => $category->name]));
         }
         return $category;
     }

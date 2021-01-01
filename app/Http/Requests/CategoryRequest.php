@@ -3,6 +3,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Type\CategoryType;
 use HoangDo\Common\Enum\CommonStatus;
 use HoangDo\Common\Request\AuthorizedRequest;
 use HoangDo\Common\Request\ValidatedRequest;
@@ -18,6 +19,7 @@ use Illuminate\Validation\Rule;
  * @property-read int|null $status
  * @property-read int|null $size_id
  * @property-read int|null $sort_number
+ * @property-read int|null $type
  */
 class CategoryRequest extends ValidatedRequest
 {
@@ -32,7 +34,8 @@ class CategoryRequest extends ValidatedRequest
             'parent_id' => ['nullable', 'numeric', 'exists:categories,id'],
             'icon' => ['nullable', 'string', 'max:255'],
             'status' => ['nullable', 'numeric', Rule::in(CommonStatus::getValues())],
-            'sort_number' => ['nullable', 'numeric', 'min:0']
+            'sort_number' => ['nullable', 'numeric', 'min:0'],
+            'type' => ['required', 'numeric', Rule::in(CategoryType::getValues())],
         ];
     }
 }
