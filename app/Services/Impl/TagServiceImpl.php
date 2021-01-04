@@ -7,6 +7,8 @@ namespace App\Services\Impl;
 use App\Repositories\Contract\TagRepository;
 use App\Repositories\Criteria\Tag\TagHasSearchCriteria;
 use App\Services\Contract\TagService;
+use HoangDo\Common\Criteria\OrderByCreatedAtDescCriteria;
+use HoangDo\Common\Criteria\OrderByCriteria;
 use HoangDo\Common\Service\SimpleService;
 use HoangDo\Common\Service\SimpleServiceProps;
 
@@ -32,7 +34,9 @@ class TagServiceImpl extends SimpleService implements TagService
 
     protected function queryToCriteria(array $query): array
     {
-        $criteria = [];
+        $criteria = [
+            new OrderByCriteria('last_used_at', 'desc')
+        ];
 
         if ($search = $query['search'] ?? null) {
             $criteria[] = new TagHasSearchCriteria($search);

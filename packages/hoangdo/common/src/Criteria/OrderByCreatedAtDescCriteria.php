@@ -3,18 +3,10 @@
 
 namespace HoangDo\Common\Criteria;
 
-
-use Prettus\Repository\Contracts\CriteriaInterface;
-use Prettus\Repository\Contracts\RepositoryInterface;
-
-class OrderByCreatedAtDescCriteria implements CriteriaInterface
+class OrderByCreatedAtDescCriteria extends OrderByCriteria
 {
-
-    /**
-     * @inheritDoc
-     */
-    public function apply($model, RepositoryInterface $repository)
+    public function __construct(string $direction = 'desc')
     {
-        return $model->orderBy('created_at', 'desc');
+        parent::__construct('created_at', $direction);
     }
 }
