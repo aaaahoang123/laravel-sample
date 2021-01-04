@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Services\Contract\ArticleService;
 use App\Services\Contract\CategoryService;
 use App\Services\Contract\ProductService;
 use App\Services\Contract\TagService;
+use App\Services\Impl\ArticleServiceImpl;
 use App\Services\Impl\CategoryServiceImpl;
 use App\Services\Impl\ProductServiceImpl;
 use App\Services\Impl\TagServiceImpl;
@@ -16,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
         CategoryService::class => CategoryServiceImpl::class,
         ProductService::class => ProductServiceImpl::class,
         TagService::class => TagServiceImpl::class,
+        ArticleService::class => ArticleServiceImpl::class,
     ];
     /**
      * Register any application services.

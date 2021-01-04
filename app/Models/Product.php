@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedById($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereWarranty($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategoryId($value)
  */
 class Product extends Model
 {

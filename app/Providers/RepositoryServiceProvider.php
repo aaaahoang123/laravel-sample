@@ -4,9 +4,11 @@
 namespace App\Providers;
 
 
+use App\Repositories\Contract\ArticleRepository;
 use App\Repositories\Contract\CategoryRepository;
 use App\Repositories\Contract\ProductRepository;
 use App\Repositories\Contract\TagRepository;
+use App\Repositories\Eloquent\ArticleRepositoryEloquent;
 use App\Repositories\Eloquent\CategoryRepositoryEloquent;
 use App\Repositories\Eloquent\ProductRepositoryEloquent;
 use App\Repositories\Eloquent\TagRepositoryEloquent;
@@ -18,5 +20,6 @@ class RepositoryServiceProvider extends ServiceProvider
         CategoryRepository::class => CategoryRepositoryEloquent::class,
         ProductRepository::class => ProductRepositoryEloquent::class,
         TagRepository::class => TagRepositoryEloquent::class,
+        ArticleRepository::class => ArticleRepositoryEloquent::class,
     ];
 }

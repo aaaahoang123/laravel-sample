@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\UserInfoController;
+use App\Http\Controllers\V1\ArticleController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\TagController;
@@ -29,4 +30,13 @@ Route::group(['prefix' => 'products'], function () {
 
 Route::group(['prefix' => 'tags'], function () {
     Route::get('', [TagController::class, 'list']);
+});
+
+Route::group(['prefix' => 'articles'], function () {
+    $controller = ArticleController::class;
+    Route::post('', [$controller, 'create'])->middleware('transaction');
+    Route::get('', [$controller, 'list'])->middleware('transaction');
+    Route::get('{slug}', [$controller, 'single']);
+    Route::put('{slug}', [$controller, 'edit']);
+    Route::delete('{slug}', [$controller, 'delete']);
 });

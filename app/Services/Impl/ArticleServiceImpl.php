@@ -4,39 +4,34 @@
 namespace App\Services\Impl;
 
 
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ArticleRequest;
+use App\Models\Article;
 use App\Models\Category;
-use App\Models\Product;
+use App\Repositories\Contract\ArticleRepository;
 use App\Repositories\Contract\CategoryRepository;
-use App\Repositories\Contract\ProductRepository;
-use App\Repositories\Contract\TagRepository;
-use App\Repositories\Criteria\Product\ProductHasSearchCriteria;
-use App\Repositories\Criteria\Product\ProductOfCategoryCriteria;
-use App\Services\Contract\ProductService;
+use App\Repositories\Criteria\Article\ArticleHasSearchCriteria;
+use App\Repositories\Criteria\Article\ArticleOfCategoryCriteria;
+use App\Services\Contract\ArticleService;
 use App\Services\Traits\ResolveTagsFromRaw;
 use HoangDo\Common\Criteria\HasStatusCriteria;
 use HoangDo\Common\Request\ValidatedRequest;
 use HoangDo\Common\Service\SimpleService;
 use HoangDo\Common\Service\SimpleServiceProps;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class ProductServiceImpl extends SimpleService implements ProductService
+class ArticleServiceImpl extends SimpleService implements ArticleService
 {
     use ResolveTagsFromRaw;
 
-    private ProductRepository $productRepo;
+    private ArticleRepository $articleRepo;
     private CategoryRepository $categoryRepo;
-    private TagRepository $tagRepo;
 
     public function __construct(
-        ProductRepository $productRepo,
-        TagRepository $tagRepo,
+        ArticleRepository $articleRepo,
         CategoryRepository $categoryRepo
     )
     {
-        $this->productRepo = $productRepo;
-        $this->tagRepo = $tagRepo;
+        $this->articleRepo = $articleRepo;
         $this->categoryRepo = $categoryRepo;
         parent::__construct();
     }
@@ -44,30 +39,27 @@ class ProductServiceImpl extends SimpleService implements ProductService
     function getInitialProps(): SimpleServiceProps
     {
         $props = new SimpleServiceProps();
-        $props->repository = $this->productRepo;
-        $props->useSlug = true;
+        $props->repository = $this->articleRepo;
         $props->identifyField = 'slug';
-        $props->listIgnoreStatus = true;
-        $props->commonRelations = ['category', 'tags'];
+        $props->useSlug = true;
+        $props->commonRelations = ['tags'];
+
         return $props;
     }
 
     protected function beforeCreate($instance, ValidatedRequest $req)
     {
         $category = $this->getValidCategory($req->input('category_id'));
-        /** @var Product $instance */
+        /** @var Article $instance */
         $instance->category()->associate($category);
-        $instance->images = implode(',', $req->input('images'));
     }
 
     protected function beforeEdit($instance, ValidatedRequest $req)
     {
-        /** @var Product $instance */
+        /** @var Article $instance */
         $category_id = $req->input('category_id');
         if ($instance->category_id != $category_id) {
             $this->beforeCreate($instance, $req);
-        } else {
-            $instance->images = implode(',', $req->input('images'));
         }
     }
 
@@ -81,30 +73,30 @@ class ProductServiceImpl extends SimpleService implements ProductService
         $this->resolveTags($instance, $req);
     }
 
-    /**
-     * @param Product $instance
-     * @param ProductRequest $req
-     */
-    private function resolveTags($instance, ProductRequest $req)
-    {
-        $tags = $this->resolveTagFromRaw($req->tags);
-        $instance->tags()->sync($tags->map(fn($tag) => $tag->id));
-        $instance->setRelation('tags', $tags);
-    }
-
     protected function queryToCriteria(array $query): array
     {
         $criteria = [];
         if ($search = $query['search'] ?? null)
-            $criteria[] = new ProductHasSearchCriteria($search);
+            $criteria[] = new ArticleHasSearchCriteria($search);
 
         if ($category = $query['category'] ?? null)
-            $criteria[] = new ProductOfCategoryCriteria($category);
+            $criteria[] = new ArticleOfCategoryCriteria($category);
 
         if ($status = $query['status'] ?? null)
             $criteria[] = new HasStatusCriteria($status);
 
         return $criteria;
+    }
+
+    /**
+     * @param Article $instance
+     * @param ArticleRequest $req
+     */
+    private function resolveTags($instance, ArticleRequest $req)
+    {
+        $tags = $this->resolveTagFromRaw($req->tags);
+        $instance->tags()->sync($tags->map(fn($tag) => $tag->id));
+        $instance->setRelation('tags', $tags);
     }
 
     private function getValidCategory($id): Category
@@ -114,8 +106,8 @@ class ProductServiceImpl extends SimpleService implements ProductService
         if (!$category->isActive()) {
             throw new BadRequestHttpException(__('messages.category_has_been_banned'));
         }
-        if (!$category->isProductCategory()) {
-            throw new BadRequestHttpException(__('messages.category_is_not_product_type', ['category' => $category->name]));
+        if (!$category->isArticleCategory()) {
+            throw new BadRequestHttpException(__('messages.category_is_not_article_type', ['category' => $category->name]));
         }
         return $category;
     }

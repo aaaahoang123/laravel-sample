@@ -10,14 +10,14 @@ use Illuminate\Support\Str;
 trait GenerateSlugTrait
 {
     /**
-     * @var Repository $_repository
+     * @var Repository $_slugRepository
      */
-    private Repository $_repository;
+    private Repository $_slugRepository;
     private string $_field = 'slug';
 
     protected function setSlugRepository($_repository): self
     {
-        $this->_repository = $_repository;
+        $this->_slugRepository = $_repository;
         return $this;
     }
 
@@ -30,7 +30,7 @@ trait GenerateSlugTrait
     private function generateSlug(string $name): string {
         $slug = Str::slug($name);
         $slug = Str::lower($slug);
-        if ($this->_repository->exists([$this->_field => $slug]))
+        if ($this->_slugRepository->exists([$this->_field => $slug]))
             $slug .= '-' . time();
         return $slug;
     }
