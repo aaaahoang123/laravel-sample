@@ -41,6 +41,7 @@ class ArticleServiceImpl extends SimpleService implements ArticleService
         $props = new SimpleServiceProps();
         $props->repository = $this->articleRepo;
         $props->identifyField = 'slug';
+        $props->listIgnoreStatus = true;
         $props->useSlug = true;
         $props->commonRelations = ['tags'];
 
