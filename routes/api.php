@@ -23,6 +23,10 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [ApiAuthController::class, 'login']);
 });
 
+Route::group(['prefix' => 'guest'], function () {
+    require_once __DIR__ . '/guest.php';
+});
+
 Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     require_once __DIR__ . '/v1.php';
 });
