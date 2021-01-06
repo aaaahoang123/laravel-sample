@@ -16,34 +16,37 @@ abstract class SimpleService implements Service
 {
     use GenerateSlugTrait;
 
-    private SimpleServiceProps $_props;
+    private $_props = null;
 
     abstract function getInitialProps(): SimpleServiceProps;
 
-    protected function __construct()
+    private function _props(): SimpleServiceProps
     {
-        $props = $this->getInitialProps();
-        $this->_props = $props;
-        if ($props->useSlug) {
-            $this->setSlugRepository($props->repository)
-                ->setSlugField($props->slugField);
+        if (!$this->_props) {
+            $props = $this->getInitialProps();
+            $this->_props = $props;
+            if ($props->useSlug) {
+                $this->setSlugRepository($props->repository)
+                    ->setSlugField($props->slugField);
+            }
         }
+        return $this->_props;
     }
 
     public function create(ValidatedRequest $req)
     {
-        $modelClass = $this->_props->repository->model();
+        $modelClass = $this->_props()->repository->model();
 
         /** @var Model $instance */
         $instance = new $modelClass($req->filteredData());
 
         $this->resolveCreator($instance, $req);
-        if ($this->_props->useSlug) {
-            $slug = $this->generateSlug($req->get($this->_props->titleField));
-            $instance->setAttribute($this->_props->slugField, $slug);
+        if ($this->_props()->useSlug) {
+            $slug = $this->generateSlug($req->get($this->_props()->titleField));
+            $instance->setAttribute($this->_props()->slugField, $slug);
         }
         $this->beforeCreate($instance, $req);
-        $instance = $this->_props->repository->save($instance);
+        $instance = $this->_props()->repository->save($instance);
         $this->afterCreate($instance, $req);
         return $instance;
     }
@@ -60,8 +63,8 @@ abstract class SimpleService implements Service
 
     public function listAll($query = null, $limit = null)
     {
-        $repository = $this->_props->repository;
-        if (!$this->_props->listIgnoreStatus) {
+        $repository = $this->_props()->repository;
+        if (!$this->_props()->listIgnoreStatus) {
             $repository->pushCriteria(new HasStatusCriteria());
         }
 
@@ -70,7 +73,7 @@ abstract class SimpleService implements Service
             $repository->pushCriteria($criteria);
         }
 
-        if ($relations = $this->_props->commonRelations) {
+        if ($relations = $this->_props()->commonRelations) {
             $repository->with($relations);
         }
 
@@ -83,9 +86,9 @@ abstract class SimpleService implements Service
     public function single($id)
     {
 
-        $repository = $this->_props->repository;
-        $repository->pushCriteria(new WhereCriteria($this->_props->identifyField, $id));
-        if ($relations = $this->_props->commonRelations) {
+        $repository = $this->_props()->repository;
+        $repository->pushCriteria(new WhereCriteria($this->_props()->identifyField, $id));
+        if ($relations = $this->_props()->commonRelations) {
             $repository->with($relations);
         }
         return $repository->firstOrFail();
@@ -101,17 +104,17 @@ abstract class SimpleService implements Service
             /** @var HasCreatorInfo $instance */
             $instance->updated_by()->associate($editor);
         }
-        if ($this->_props->useSlug) {
-            $oldName = $instance->getOriginal($this->_props->titleField);
-            $newName = $req->input($this->_props->titleField);
+        if ($this->_props()->useSlug) {
+            $oldName = $instance->getOriginal($this->_props()->titleField);
+            $newName = $req->input($this->_props()->titleField);
             if ($newName && $oldName != $newName) {
                 $newSlug = $this->generateSlug($newName);
-                $instance->setAttribute($this->_props->slugField, $newSlug);
+                $instance->setAttribute($this->_props()->slugField, $newSlug);
             }
         }
 
         $this->beforeEdit($instance, $req);
-        $instance = $this->_props->repository->save($instance);
+        $instance = $this->_props()->repository->save($instance);
         $this->afterEdit($instance, $req);
 
         return $instance;
@@ -145,7 +148,7 @@ abstract class SimpleService implements Service
     public function delete($id)
     {
         $instance = $this->single($id);
-        $instance->setAttribute($this->_props->statusField, CommonStatus::INACTIVE);
-        return $this->_props->repository->save($instance);
+        $instance->setAttribute($this->_props()->statusField, CommonStatus::INACTIVE);
+        return $this->_props()->repository->save($instance);
     }
 }

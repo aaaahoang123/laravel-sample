@@ -21,7 +21,6 @@ class TagServiceImpl extends SimpleService implements TagService
     )
     {
         $this->tagRepo = $tagRepo;
-        parent::__construct();
     }
 
     function getInitialProps(): SimpleServiceProps

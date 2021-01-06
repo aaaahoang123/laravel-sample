@@ -20,7 +20,6 @@ class CategoryServiceImpl extends SimpleService implements CategoryService
     )
     {
         $this->categoryRepo = $categoryRepo;
-        parent::__construct();
     }
 
     function getInitialProps(): SimpleServiceProps

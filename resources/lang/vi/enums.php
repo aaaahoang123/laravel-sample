@@ -8,6 +8,7 @@
  * Time: 2:42 PM
  */
 
+use App\Enums\Status\ContactMessageStatus;
 use HoangDo\Common\Enum\CommonStatus;
 
 return [
@@ -40,5 +41,10 @@ return [
     CommonStatus::class => [
         CommonStatus::ACTIVE => 'Hoạt động',
         CommonStatus::INACTIVE => 'Không hoạt động'
+    ],
+    ContactMessageStatus::class => [
+        ContactMessageStatus::WAITING => 'Đang chờ',
+        ContactMessageStatus::RESOLVED => 'Đã xử lý',
+        ContactMessageStatus::DELETED => 'Đã xóa'
     ],
 ];

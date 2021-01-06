@@ -10,7 +10,10 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 class WhereCriteria implements CriteriaInterface
 {
     private string $field;
-    private string $operator;
+    /**
+     * @var string|int|mixed|null
+     */
+    private $operator;
     private $value;
     public function __construct($field, $operator, $value = null)
     {

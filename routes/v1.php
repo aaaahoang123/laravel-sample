@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\UserInfoController;
 use App\Http\Controllers\V1\ArticleController;
 use App\Http\Controllers\V1\BannerController;
 use App\Http\Controllers\V1\CategoryController;
+use App\Http\Controllers\V1\ContactMessageController;
+use App\Http\Controllers\V1\CustomerController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\TagController;
 
@@ -23,7 +25,7 @@ Route::group(['prefix' => 'categories'], function () {
 Route::group(['prefix' => 'products'], function () {
     $controller = ProductController::class;
     Route::post('', [$controller, 'create'])->middleware('transaction');
-    Route::get('', [$controller, 'list'])->middleware('transaction');
+    Route::get('', [$controller, 'list']);
     Route::get('{slug}', [$controller, 'single']);
     Route::put('{slug}', [$controller, 'edit']);
     Route::delete('{slug}', [$controller, 'delete']);
@@ -36,7 +38,7 @@ Route::group(['prefix' => 'tags'], function () {
 Route::group(['prefix' => 'articles'], function () {
     $controller = ArticleController::class;
     Route::post('', [$controller, 'create'])->middleware('transaction');
-    Route::get('', [$controller, 'list'])->middleware('transaction');
+    Route::get('', [$controller, 'list']);
     Route::get('{slug}', [$controller, 'single']);
     Route::put('{slug}', [$controller, 'edit']);
     Route::delete('{slug}', [$controller, 'delete']);
@@ -50,3 +52,12 @@ Route::group(['prefix' => 'banners'], function () {
     Route::put('{slug}', [$controller, 'edit']);
     Route::delete('{slug}', [$controller, 'delete']);
 });
+
+Route::group(['prefix' => 'contact-messages'], function () {
+    Route::get('', [ ContactMessageController::class, 'list' ]);
+    Route::patch('{id}/read', [ ContactMessageController::class, 'markAsRead' ]);
+    Route::patch('{id}/resolve', [ ContactMessageController::class, 'markAsResolved' ]);
+    Route::delete('{id}', [ ContactMessageController::class, 'markAsDeleted' ]);
+});
+
+Route::apiResource('customers', CustomerController::class);

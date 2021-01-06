@@ -18,7 +18,6 @@ use HoangDo\Common\Criteria\HasStatusCriteria;
 use HoangDo\Common\Request\ValidatedRequest;
 use HoangDo\Common\Service\SimpleService;
 use HoangDo\Common\Service\SimpleServiceProps;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProductServiceImpl extends SimpleService implements ProductService
@@ -38,7 +37,6 @@ class ProductServiceImpl extends SimpleService implements ProductService
         $this->productRepo = $productRepo;
         $this->tagRepo = $tagRepo;
         $this->categoryRepo = $categoryRepo;
-        parent::__construct();
     }
 
     function getInitialProps(): SimpleServiceProps

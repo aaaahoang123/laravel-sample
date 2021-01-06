@@ -22,7 +22,6 @@ class BannerServiceImpl extends SimpleService implements BannerService
     )
     {
         $this->bannerRepo = $bannerRepo;
-        parent::__construct();
     }
 
     function getInitialProps(): SimpleServiceProps

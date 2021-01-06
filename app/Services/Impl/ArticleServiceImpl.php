@@ -33,7 +33,6 @@ class ArticleServiceImpl extends SimpleService implements ArticleService
     {
         $this->articleRepo = $articleRepo;
         $this->categoryRepo = $categoryRepo;
-        parent::__construct();
     }
 
     function getInitialProps(): SimpleServiceProps
