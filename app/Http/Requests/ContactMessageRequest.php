@@ -23,7 +23,8 @@ class ContactMessageRequest extends CustomerRequest
     {
         return [
             'subject' => ['required', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:65000']
+            'message' => ['required', 'string', 'max:65000'],
+            'phone_number' => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10', 'max:50'],
         ];
     }
 }
