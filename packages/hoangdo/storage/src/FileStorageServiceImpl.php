@@ -31,13 +31,9 @@ class FileStorageServiceImpl implements FileStorageService
     }
 
     /**
-     * @param UploadedFile|string $file
-     * @param string $folder
-     * @return string
-     * @throws BadRequestHttpException
-     * @throws RuntimeException
+     * @inheritDoc
      */
-    public function storeFile($file = null, $folder = '')
+    public function storeFile($file = null, $folder = '', $limit_width = 1000, $resolution = .8)
     {
         if (!$file)
             throw new BadRequestHttpException(__('messages.not_found_file'));
@@ -53,7 +49,7 @@ class FileStorageServiceImpl implements FileStorageService
                 : $file_name;
 
             if (in_array($extension, $this->compressibleExtension)) {
-                $this->compressResourceImage($resource, $path, 1000);
+                $this->compressResourceImage($resource, $path, $limit_width, $resolution);
             } else {
                 $this->saveFile($resource, $path);
             }
@@ -88,16 +84,13 @@ class FileStorageServiceImpl implements FileStorageService
     }
 
     /**
-     * @param UploadedFile[] $files
-     * @param string $folder
-     * @return string[]
-     * @throws ExecuteException
+     * @inheritDoc
      */
-    public function storeFiles($files = [], $folder = '')
+    public function storeFiles($files = [], $folder = '', $limit_width = 1000, $resolution = .8)
     {
         $result = [];
         foreach ($files as $file)
-            $result[] = $this->storeFile($file, $folder);
+            $result[] = $this->storeFile($file, $folder, $limit_width, $resolution);
 
         return $result;
     }
@@ -159,14 +152,15 @@ class FileStorageServiceImpl implements FileStorageService
      * @param Image $source_image
      * @param $path
      * @param int $limit_width
+     * @param float $quality
      */
-    private function compressResourceImage($source_image, $path, $limit_width = 400) {
+    private function compressResourceImage($source_image, $path, $limit_width = 400, $quality = .8) {
         $width = $source_image->width();
         $height = $source_image->height();
         if ($width > $limit_width) {
             $source_image = $source_image
                 ->resize($limit_width, $limit_width * $height / $width)
-                ->encode('jpg', 80);
+                ->encode('jpg', $quality * 100);
         }
         $this->saveFile($source_image, $path);
     }

@@ -9,20 +9,24 @@ use Illuminate\Http\UploadedFile;
 interface FileStorageService
 {
     /**
-     * @param UploadedFile $file
+     * @param null $file
      * @param string $folder
+     * @param int $limit_width
+     * @param float $resolution
      * @return string
      * @throws ExecuteException
      */
-    public function storeFile($file = null, $folder = '');
+    public function storeFile($file = null, $folder = '', $limit_width = 1000, $resolution = .8);
 
     /**
      * @param UploadedFile[] $files
      * @param string $folder
+     * @param int $limit_width
+     * @param float $resolution
      * @return string[]
      * @throws ExecuteException
      */
-    public function storeFiles($files = [], $folder = '');
+    public function storeFiles($files = [], $folder = '', $limit_width = 1000, $resolution = .8);
 
     /**
      * @param $path

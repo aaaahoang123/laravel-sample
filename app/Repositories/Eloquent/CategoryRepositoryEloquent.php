@@ -41,10 +41,11 @@ class CategoryRepositoryEloquent extends RepositoryEloquent implements CategoryR
     /**
      * @inheritDoc
      */
-    public function findAllCategories()
+    public function findAllCategories($query = null)
     {
         /** @var Collection $parents */
         $parents = $this->makeModel()->newQuery()
+            ->where($query ?? [])
             ->whereNull('parent_id')
             ->where('status', CommonStatus::ACTIVE)
             ->get();

@@ -34,12 +34,15 @@ class CategoryServiceImpl extends SimpleService implements CategoryService
 
     public function listAll($query = null, $limit = null)
     {
-        return $this->categoryRepo->findAllCategories();
+        return $this->categoryRepo->findAllCategories($query);
     }
 
     protected function beforeEdit($instance, ValidatedRequest $req)
     {
         /** @var Category $instance */
+        if ($instance->is_system){
+            throw new BadRequestHttpException(__('messages.system_category_can_not_edit'));
+        }
         if (is_null($req->get('parent_id'))) {
             $instance->parent_id = null;
         }

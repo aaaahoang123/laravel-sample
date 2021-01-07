@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $status 1: Hoạt động. -1: Không hoạt động.
+ * @property boolean $is_system
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereIcon($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
@@ -54,9 +55,12 @@ class Category extends Model
         'icon',
         'status',
         'parent_id',
-        'size_id',
         'sort_number',
         'type'
+    ];
+
+    protected $casts = [
+        'is_system' => 'boolean'
     ];
 
     public function parent(): BelongsTo

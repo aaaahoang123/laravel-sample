@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Services\Contract\CategoryService;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -23,7 +24,13 @@ class CategoryController extends Controller
     }
 
     public function list() {
-        return $this->categoryService->listAll();
+        $query = null;
+        if (!auth()->check()) {
+            $query = [
+                'is_system' => false
+            ];
+        }
+        return $this->categoryService->listAll($query);
     }
 
     public function single($url) {

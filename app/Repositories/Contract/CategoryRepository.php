@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Collection;
 interface CategoryRepository extends Repository
 {
     /**
+     * @param array|null $query
      * @return Collection|Category[]
      */
-    public function findAllCategories();
+    public function findAllCategories($query = null);
 }

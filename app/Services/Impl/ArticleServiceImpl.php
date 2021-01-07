@@ -58,7 +58,10 @@ class ArticleServiceImpl extends SimpleService implements ArticleService
     {
         /** @var Article $instance */
         $category_id = $req->input('category_id');
-        if ($instance->category_id != $category_id) {
+        if ($instance->category->is_system) {
+            $instance->name = $instance->getOriginal('name');
+            $instance->slug = $instance->getOriginal('slug');
+        } elseif ($instance->category_id != $category_id) {
             $this->beforeCreate($instance, $req);
         }
     }
