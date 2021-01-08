@@ -8,6 +8,7 @@ use App\Http\Controllers\V1\ContactMessageController;
 use App\Http\Controllers\V1\CustomerController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\TagController;
+use App\Http\Controllers\V1\UserController;
 
 Route::group(['prefix' => 'user-info'], function () {
     Route::get('', [UserInfoController::class, 'userData']);
@@ -61,3 +62,4 @@ Route::group(['prefix' => 'contact-messages'], function () {
 });
 
 Route::apiResource('customers', CustomerController::class);
+Route::apiResource('users', UserController::class);

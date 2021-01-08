@@ -7,9 +7,6 @@
 
 namespace App\Http\Requests;
 
-
-use HoangDo\Common\Request\ValidatedRequest;
-
 /**
  * Class ContactMessageRequest
  * @package App\Http\Requests

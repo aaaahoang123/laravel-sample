@@ -14,26 +14,11 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  *
  * @package namespace App\Repositories\Criteria\Common;
  */
-class HasStatusCriteria implements CriteriaInterface
+class HasStatusCriteria extends WhereCriteria
 {
-    private $status;
-
     public function __construct($status = CommonStatus::ACTIVE)
     {
-        $this->status = $status;
-    }
-
-    /**
-     * Apply criteria in query repository
-     *
-     * @param Model|Builder              $model
-     * @param RepositoryInterface $repository
-     *
-     * @return mixed
-     */
-    public function apply($model, RepositoryInterface $repository)
-    {
-        return $model->where('status', $this->status);
+        parent::__construct('status', $status);
     }
 }
 
