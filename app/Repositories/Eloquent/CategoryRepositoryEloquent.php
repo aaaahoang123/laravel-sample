@@ -104,4 +104,12 @@ class CategoryRepositoryEloquent extends RepositoryEloquent implements CategoryR
             }
         }
     }
+
+    public function findAllChildNodesOfCategory(Category $category): Collection
+    {
+        $path = $category->path;
+        return $this->model->newQuery()
+            ->where('path', 'like', "$path.%")
+            ->get();
+    }
 }

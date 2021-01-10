@@ -16,10 +16,10 @@ Route::group(['prefix' => 'user-info'], function () {
 
 Route::group(['prefix' => 'categories'], function () {
     $controller = CategoryController::class;
-    Route::post('', [$controller, 'create']);
+    Route::post('', [$controller, 'create'])->middleware('transaction');
     Route::get('', [$controller, 'list']);
     Route::get('{url}', [$controller, 'single']);
-    Route::put('{url}', [$controller, 'edit']);
+    Route::put('{url}', [$controller, 'edit'])->middleware('transaction');
     Route::delete('{url}', [$controller, 'delete']);
 });
 

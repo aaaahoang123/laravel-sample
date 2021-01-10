@@ -78,9 +78,13 @@ abstract class SimpleService implements Service
         }
 
         if ($limit) {
-            return $repository->paginate($limit);
+            $result = $repository->paginate($limit);
+        } else {
+            $result = $repository->all();
         }
-        return $repository->all();
+        $repository->resetCriteria();
+        $repository->resetScope();
+        return $result;
     }
 
     public function single($id)
@@ -91,7 +95,9 @@ abstract class SimpleService implements Service
         if ($relations = $this->_props()->commonRelations) {
             $repository->with($relations);
         }
-        return $repository->firstOrFail();
+        $result = $repository->firstOrFail();
+        $repository->resetCriteria();
+        return $result;
     }
 
     public function edit($id, ValidatedRequest $req)

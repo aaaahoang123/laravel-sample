@@ -10,8 +10,9 @@ use App\Models\Category;
 use App\Repositories\Contract\ArticleRepository;
 use App\Repositories\Contract\CategoryRepository;
 use App\Repositories\Criteria\Article\ArticleHasSearchCriteria;
-use App\Repositories\Criteria\Article\ArticleOfCategoryCriteria;
+use App\Repositories\Criteria\Product\BelongToCategoryCriteria;
 use App\Services\Contract\ArticleService;
+use App\Services\Traits\ResolveCategoryTree;
 use App\Services\Traits\ResolveTagsFromRaw;
 use HoangDo\Common\Criteria\HasStatusCriteria;
 use HoangDo\Common\Request\ValidatedRequest;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ArticleServiceImpl extends SimpleService implements ArticleService
 {
-    use ResolveTagsFromRaw;
+    use ResolveTagsFromRaw, ResolveCategoryTree;
 
     private ArticleRepository $articleRepo;
     private CategoryRepository $categoryRepo;
@@ -82,8 +83,10 @@ class ArticleServiceImpl extends SimpleService implements ArticleService
         if ($search = $query['search'] ?? null)
             $criteria[] = new ArticleHasSearchCriteria($search);
 
-        if ($category = $query['category'] ?? null)
-            $criteria[] = new ArticleOfCategoryCriteria($category);
+        if ($category = $query['category'] ?? null) {
+            $category_ids = $this->getExpandedNodeIdsFromCategory($category);
+            $criteria[] = new BelongToCategoryCriteria($category_ids);
+        }
 
         if ($status = $query['status'] ?? null)
             $criteria[] = new HasStatusCriteria($status);

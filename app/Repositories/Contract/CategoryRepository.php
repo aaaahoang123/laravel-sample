@@ -18,4 +18,6 @@ interface CategoryRepository extends Repository
      * @return Collection|Category[]
      */
     public function findAllCategories($query = null);
+
+    public function findAllChildNodesOfCategory(Category $category): Collection;
 }

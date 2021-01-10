@@ -11,8 +11,9 @@ use App\Repositories\Contract\CategoryRepository;
 use App\Repositories\Contract\ProductRepository;
 use App\Repositories\Contract\TagRepository;
 use App\Repositories\Criteria\Product\ProductHasSearchCriteria;
-use App\Repositories\Criteria\Product\ProductOfCategoryCriteria;
+use App\Repositories\Criteria\Product\BelongToCategoryCriteria;
 use App\Services\Contract\ProductService;
+use App\Services\Traits\ResolveCategoryTree;
 use App\Services\Traits\ResolveTagsFromRaw;
 use HoangDo\Common\Criteria\HasStatusCriteria;
 use HoangDo\Common\Request\ValidatedRequest;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProductServiceImpl extends SimpleService implements ProductService
 {
-    use ResolveTagsFromRaw;
+    use ResolveTagsFromRaw, ResolveCategoryTree;
 
     private ProductRepository $productRepo;
     private CategoryRepository $categoryRepo;
@@ -96,8 +97,10 @@ class ProductServiceImpl extends SimpleService implements ProductService
         if ($search = $query['search'] ?? null)
             $criteria[] = new ProductHasSearchCriteria($search);
 
-        if ($category = $query['category'] ?? null)
-            $criteria[] = new ProductOfCategoryCriteria($category);
+        if ($category = $query['category'] ?? null) {
+            $category_ids = $this->getExpandedNodeIdsFromCategory($category);
+            $criteria[] = new BelongToCategoryCriteria($category_ids);
+        }
 
         if ($status = $query['status'] ?? null)
             $criteria[] = new HasStatusCriteria($status);
