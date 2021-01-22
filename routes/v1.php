@@ -7,6 +7,7 @@ use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\ContactMessageController;
 use App\Http\Controllers\V1\CustomerController;
 use App\Http\Controllers\V1\ProductController;
+use App\Http\Controllers\V1\SystemConfigController;
 use App\Http\Controllers\V1\TagController;
 use App\Http\Controllers\V1\UserController;
 
@@ -63,3 +64,7 @@ Route::group(['prefix' => 'contact-messages'], function () {
 
 Route::apiResource('customers', CustomerController::class);
 Route::apiResource('users', UserController::class);
+Route::group(['prefix' => 'system-configs'], function () {
+    Route::get('', [SystemConfigController::class, 'list']);
+    Route::put('{id}', [SystemConfigController::class, 'editOrCreate']);
+});

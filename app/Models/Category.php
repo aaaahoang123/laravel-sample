@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereIsSystem($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category wherePath($value)
  */
 class Category extends Model
 {
