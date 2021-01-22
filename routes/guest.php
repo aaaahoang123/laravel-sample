@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\BannerController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\ContactMessageController;
 use App\Http\Controllers\V1\ProductController;
+use App\Http\Controllers\V1\SystemConfigController;
 use App\Http\Controllers\V1\TagController;
 
 Route::group(['prefix' => 'categories'], function () {
@@ -37,4 +38,8 @@ Route::group(['prefix' => 'banners'], function () {
 
 Route::group(['prefix' => 'contact-messages'], function () {
     Route::post('', [ ContactMessageController::class, 'create' ]);
+});
+
+Route::group(['prefix' => 'system-configs'], function () {
+    Route::get('', [SystemConfigController::class, 'list']);
 });
