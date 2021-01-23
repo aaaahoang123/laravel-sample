@@ -47,4 +47,15 @@ class CustomerServiceImpl extends SimpleService implements CustomerService
 
         return $criteria;
     }
+
+    public function countCustomerByStatus($status = null): int
+    {
+        if ($status) {
+            $this->customerRepo->pushCriteria(new HasStatusCriteria($status));
+        }
+
+        $result = $this->customerRepo->count();
+        $this->customerRepo->resetCriteria();
+        return $result;
+    }
 }

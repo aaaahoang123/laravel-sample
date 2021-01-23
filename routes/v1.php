@@ -6,6 +6,7 @@ use App\Http\Controllers\V1\BannerController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\ContactMessageController;
 use App\Http\Controllers\V1\CustomerController;
+use App\Http\Controllers\V1\DashboardController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\SystemConfigController;
 use App\Http\Controllers\V1\TagController;
@@ -67,4 +68,10 @@ Route::apiResource('users', UserController::class);
 Route::group(['prefix' => 'system-configs'], function () {
     Route::get('', [SystemConfigController::class, 'list']);
     Route::put('{id}', [SystemConfigController::class, 'editOrCreate']);
+});
+
+Route::group(['prefix' => 'dashboard'], function () {
+    Route::get('products', [DashboardController::class, 'productCounts']);
+    Route::get('customers', [ DashboardController::class, 'customerCounts' ]);
+    Route::get('messages', [ DashboardController::class, 'contactMessagesCount' ]);
 });

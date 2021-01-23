@@ -12,5 +12,5 @@ use HoangDo\Common\Service\Service;
 
 interface CustomerService extends Service
 {
-
+    public function countCustomerByStatus($status = null): int;
 }

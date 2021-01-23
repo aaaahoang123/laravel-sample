@@ -19,4 +19,6 @@ interface ContactMessageService
     public function read($id): ContactMessage;
     public function resolve($id): ContactMessage;
     public function delete($id): ContactMessage;
+    public function countByStatus($status = null): int;
+    public function countByRead($read): int;
 }
