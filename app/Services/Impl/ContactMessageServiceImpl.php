@@ -103,4 +103,21 @@ class ContactMessageServiceImpl implements ContactMessageService
     }
 
 
+    public function countByStatus($status = null): int
+    {
+        if ($status) {
+            $this->contactRepo->pushCriteria(new HasStatusCriteria($status));
+        }
+        $result = $this->contactRepo->count();
+        $this->contactRepo->resetCriteria();
+        return $result;
+    }
+
+    public function countByRead($read): int
+    {
+        $this->contactRepo->pushCriteria(new WhereCriteria('read', $read));
+        $result = $this->contactRepo->count();
+        $this->contactRepo->resetCriteria();
+        return $result;
+    }
 }

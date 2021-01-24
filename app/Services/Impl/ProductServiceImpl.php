@@ -15,10 +15,15 @@ use App\Repositories\Criteria\Product\BelongToCategoryCriteria;
 use App\Services\Contract\ProductService;
 use App\Services\Traits\ResolveCategoryTree;
 use App\Services\Traits\ResolveTagsFromRaw;
+use Carbon\Carbon;
+use HoangDo\Common\Criteria\HasFromCriteria;
 use HoangDo\Common\Criteria\HasStatusCriteria;
+use HoangDo\Common\Enum\CommonStatus;
 use HoangDo\Common\Request\ValidatedRequest;
 use HoangDo\Common\Service\SimpleService;
 use HoangDo\Common\Service\SimpleServiceProps;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProductServiceImpl extends SimpleService implements ProductService
@@ -47,7 +52,7 @@ class ProductServiceImpl extends SimpleService implements ProductService
         $props->useSlug = true;
         $props->identifyField = 'slug';
         $props->listIgnoreStatus = true;
-        $props->commonRelations = ['category', 'tags'];
+        $props->commonRelations = ['category', 'tags', 'created_by'];
         return $props;
     }
 
@@ -119,5 +124,38 @@ class ProductServiceImpl extends SimpleService implements ProductService
             throw new BadRequestHttpException(__('messages.category_is_not_product_type', ['category' => $category->name]));
         }
         return $category;
+    }
+
+    public function statisticsInYears(): Collection
+    {
+        $from = Carbon::now()->subYear()->addMonth()->startOfMonth();
+        return Product::query()
+            ->selectRaw('month(month_yr) as mon, avg(month_qty) as avg_qty')
+            ->fromSub(fn(Builder $q) =>
+                $q->selectRaw('last_day(created_at) as month_yr, count(id) as month_qty')
+                    ->groupByRaw('last_day(created_at)')
+                    ->where('created_at', '>=', $from)
+            , 'dc')
+            ->groupByRaw('month(month_yr)')
+            ->get();
+    }
+
+    public function countActiveProductThisMonth(): int
+    {
+        $this->productRepo->pushCriteria([
+            new HasFromCriteria(Carbon::now()->startOfMonth()),
+            new HasStatusCriteria(CommonStatus::ACTIVE)
+        ]);
+        $result = $this->productRepo->count();
+        $this->productRepo->resetCriteria();
+        return $result;
+    }
+
+    public function countByStatus($status): int
+    {
+        $this->productRepo->pushCriteria(new HasStatusCriteria($status));
+        $result = $this->productRepo->count();
+        $this->productRepo->resetCriteria();
+        return $result;
     }
 }
