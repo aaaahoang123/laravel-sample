@@ -25,6 +25,27 @@ class SystemConfigSeeder extends Seeder
     {
         $config = [
             [
+                'id' => 'TESTIMONIAL',
+                'data_type' => SystemConfigDataType::JSON,
+                'value' => [
+                    [
+                        'content' => 'Chúng tôi đã sử dụng qua dịch vụ của các bạn, rất hài lòng và sẽ hợp tác tiếp',
+                        'author' => 'Hoàng Sơn',
+                        'job' => 'Giám đốc'
+                    ],
+                    [
+                        'content' => 'Chúng tôi đã sử dụng qua dịch vụ của các bạn, rất hài lòng và sẽ hợp tác tiếp',
+                        'author' => 'Hoàng Sơn',
+                        'job' => 'Giám đốc'
+                    ],
+                    [
+                        'content' => 'Chúng tôi đã sử dụng qua dịch vụ của các bạn, rất hài lòng và sẽ hợp tác tiếp',
+                        'author' => 'Hoàng Sơn',
+                        'job' => 'Giám đốc'
+                    ]
+                ]
+            ],
+            [
                 'id' => 'CONTACT',
                 'data_type' => SystemConfigDataType::JSON,
                 'value' => [
