@@ -10,6 +10,7 @@ namespace App\Services\Impl;
 
 use App\Repositories\Contract\BannerRepository;
 use App\Services\Contract\BannerService;
+use HoangDo\Common\Criteria\OrderByCriteria;
 use HoangDo\Common\Service\SimpleService;
 use HoangDo\Common\Service\SimpleServiceProps;
 
@@ -29,5 +30,12 @@ class BannerServiceImpl extends SimpleService implements BannerService
         $props = new SimpleServiceProps();
         $props->repository = $this->bannerRepo;
         return $props;
+    }
+
+    protected function queryToCriteria(array $query): array
+    {
+        return [
+            new OrderByCriteria('sort_number', 'desc')
+        ];
     }
 }
