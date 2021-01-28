@@ -32,7 +32,7 @@ class BannerServiceImpl extends SimpleService implements BannerService
         return $props;
     }
 
-    protected function queryToCriteria(array $query): array
+    protected function commonCriteria(): array
     {
         return [
             new OrderByCriteria('sort_number', 'desc')

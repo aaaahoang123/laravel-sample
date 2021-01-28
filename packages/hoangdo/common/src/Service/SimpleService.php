@@ -72,6 +72,7 @@ abstract class SimpleService implements Service
             $criteria = $this->queryToCriteria($query);
             $repository->pushCriteria($criteria);
         }
+        $repository->pushCriteria($this->commonCriteria());
 
         if ($relations = $this->_props()->commonRelations) {
             $repository->with($relations);
@@ -147,6 +148,11 @@ abstract class SimpleService implements Service
      * @return array|CriteriaInterface[]|string[]
      */
     protected function queryToCriteria(array $query): array
+    {
+        return [];
+    }
+
+    protected function commonCriteria(): array
     {
         return [];
     }
