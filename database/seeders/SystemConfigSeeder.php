@@ -116,7 +116,65 @@ class SystemConfigSeeder extends Seeder
                         ]
                     ]
                 ]
-            ]
+            ],
+            [
+                'id' => 'COMPANY_STATUS',
+                'data_type' => SystemConfigDataType::JSON,
+                'value' => [
+                    [
+                        'title' => 'Khách hàng',
+                        'value' => '1000',
+                    ],
+                    [
+                        'title' => 'Kho mẫu',
+                        'value' => '90',
+                    ],
+                    [
+                        'title' => 'Nhân sự',
+                        'value' => '100',
+                    ],
+                    [
+                        'title' => 'Kinh nghiệm',
+                        'value' => '1000',
+                    ],
+                ]
+            ],
+            [
+                'id' => 'ABOUT_TWO',
+                'data_type' => SystemConfigDataType::JSON,
+                'value' => [
+                    [
+                        'title' => 'TÍNH SẴN CÓ',
+                        'description' => 'Công ty T-Tech luôn đảm bảo sẵn sàng và kịp thời giao hàng cho khách hàng từ 4 – 20 tuần kể từ ngày mua hàng, tùy thuộc loại sản phẩm.',
+                        'icon' => ''
+                    ],
+                    [
+                        'title' => 'UY TÍN HÀNG ĐẦU',
+                        'value' => 'Có mặt trên thị trường hơn 5 năm qua, Công ty T-Tech là đối tác chiến lược của các Bộ, Ban ngành và công ty trên khắp 64 tỉnh thành',
+                        'icon' => ''
+                    ],
+                    [
+                        'title' => 'ĐẢM BẢO CHẤT LƯỢNG',
+                        'value' => 'Để đảm bảo chất lượng của các sản phẩm, T-Tech chú trọng từng bộ phận, chi tiết qua việc sử dụng các linh kiện nhập các nước G7.',
+                        'icon' => ''
+                    ],
+                    [
+                        'title' => 'GIÁ CẢ CẠNH TRANH',
+                        'value' => 'Sản phẩm được nhập khẩu và lắp ráp trực tiếp tại T-Tech, vì vậy khách hàng luôn được hưởng giá cả cạnh tranh giảm thiểu 30-50% giá xe nhập khẩu nguyên chiếc mà chất lượng không đổi.',
+                        'icon' => ''
+                    ],
+                    [
+                        'title' => 'DỊCH VỤ HẬU MÃI TỐT NHẤT',
+                        'value' => 'Với đội ngũ công nhân, kỹ sư lành nghề và giàu kinh nghiệm, các sản phẩm sau khi mua của khách hàng sẽ được bảo trì và sửa chữa hoàn toàn miễn phí.',
+                        'icon' => ''
+                    ],
+                    [
+                        'title' => 'TÍNH ĐA DẠNG',
+                        'value' => 'Qua hơn 5 năm nghiên cứu và phát triển, T-Tech có một danh mục sản phẩm đa dạng, đáp ứng bất kỳ nhu cầu chuyên biệt nào của khách hàng.',
+                        'icon' => ''
+                    ],
+                ]
+            ],
         ];
 
         foreach ($config as $c) {
