@@ -43,7 +43,7 @@ class ArticleServiceImpl extends SimpleService implements ArticleService
         $props->identifyField = 'slug';
         $props->listIgnoreStatus = true;
         $props->useSlug = true;
-        $props->commonRelations = ['tags'];
+        $props->commonRelations = ['tags', 'created_by'];
 
         return $props;
     }
